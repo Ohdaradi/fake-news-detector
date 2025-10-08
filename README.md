@@ -18,7 +18,7 @@ A modern, responsive web application powered by AI for detecting fake news throu
 - **Real-time Predictions**: Instant AI-powered fake news detection
 - **Interactive Dashboard**: Beautiful analytics with animated statistics
 - **Smart Loading States**: Progress indicators and smooth state transitions
-- **Session Management**: Secure admin authentication system
+- **No Login Required**: Direct access to all features
 
 ### 📱 **Responsive Features**
 - **Mobile-First Design**: Optimized for all screen sizes
@@ -44,7 +44,7 @@ A modern, responsive web application powered by AI for detecting fake news throu
 - **Web Fonts** - Inter font family for typography
 
 ### **AI Models**
-- **Text Classification**: Logistic Regression with TF-IDF vectorization
+- **Text Classification**: Logistic Regression with TF-IDF vectorization (98.77% accuracy)
 - **Image Classification**: MobileNetV2 transfer learning model
 - **URL Analysis**: Pattern-based validation (extensible)
 
@@ -180,3 +180,48 @@ Educational use only. Please ensure compliance with data usage policies and AI e
 **🔍 RealFake AI** - *Powered by Advanced Machine Learning & Modern Web Technologies*
 
 *"Empowering users with AI-driven truth detection in the digital age"*
+
+## � **Installation & Setup**
+
+### **Quick Start**
+```bash
+# Clone the repository
+git clone https://github.com/Ohdaradi/fake-news-detector.git
+cd fake-news-detector
+
+# Install dependencies
+pip install flask tensorflow scikit-learn pandas matplotlib pillow
+
+# Run the application
+python run_app.py
+```
+
+### **Access the Application**
+- Open your browser and go to: **http://localhost:5000**
+- Start analyzing content immediately - no login required!
+
+---
+
+## 📁 **Project Structure**
+```
+RealFake/
+│
+├── static/
+│   ├── style.css              # Modern glassmorphism CSS
+│   └── uploads/               # Uploaded image storage
+│
+├── templates/
+│   ├── index.html             # Main interface
+│   └── dashboard.html         # Analytics dashboard
+│
+├── app.py                     # Flask backend with AI models
+├── run_app.py                 # Enhanced startup script
+├── train_model.py             # Text model training
+├── train_image_model.py       # Image model training
+├── test_model.py              # Model validation
+├── model.pkl                  # Trained text classifier
+├── vectorizer.pkl             # TF-IDF vectorizer
+├── image_model.h5             # CNN image classifier
+├── Fake.csv / True.csv        # Training datasets
+└── README.md                  # This documentation
+```
