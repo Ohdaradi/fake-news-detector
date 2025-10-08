@@ -1,0 +1,15 @@
+# Render.com Deployment Configuration
+services:
+  - type: web
+    name: realfake-detector
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn --bind 0.0.0.0:$PORT app:app"
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.9
+      - key: FLASK_ENV
+        value: production
+      - key: PORT
+        value: 5000

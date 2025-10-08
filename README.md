@@ -48,6 +48,48 @@ A modern, responsive web application powered by AI for detecting fake news throu
 - **Image Classification**: MobileNetV2 transfer learning model
 - **URL Analysis**: Pattern-based validation (extensible)
 
+## 🌐 **Live Demo & Deployment**
+
+### **Deploy Your Own Instance** 
+Choose your preferred hosting platform:
+
+#### 🚀 **Render.com (Recommended - Free Tier Available)**
+1. Fork this repository to your GitHub account
+2. Sign up at [render.com](https://render.com)
+3. Connect your GitHub account
+4. Create a new **Web Service** from your forked repository
+5. **Environment**: Python 3
+6. **Build Command**: `pip install -r requirements.txt`
+7. **Start Command**: `gunicorn --bind 0.0.0.0:$PORT app:app`
+8. Click **Create Web Service**
+9. Your app will be live at: `https://your-app-name.onrender.com`
+
+#### ⚡ **Railway.app (Fast & Simple)**
+1. Visit [railway.app](https://railway.app)
+2. Connect your GitHub account
+3. Click **Deploy from GitHub repo**
+4. Select your forked repository
+5. Railway will auto-detect the configuration from `railway.json`
+6. Your app will be live in minutes!
+
+#### 🔥 **Heroku (Classic Choice)**
+1. Install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+2. Login: `heroku login`
+3. Create app: `heroku create your-app-name`
+4. Deploy: `git push heroku main`
+5. Open: `heroku open`
+
+#### ⚙️ **Vercel (Serverless)**
+1. Install Vercel CLI: `npm i -g vercel`
+2. Run: `vercel --prod`
+3. Follow the prompts
+4. Your app will be live instantly!
+
+### **One-Click Deploy Buttons**
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Ohdaradi/fake-news-detector)
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/Ohdaradi/fake-news-detector)
+
 ## 🚀 **Quick Start**
 
 ### **Method 1: Windows Batch File**
