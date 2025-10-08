@@ -1,0 +1,11 @@
+timestamp,text,link,image_path,result
+2025-07-07 22:13:42,india won 2nd test match,,,Text: Fake (10.0%)
+2025-07-07 22:14:24,india won versus england,,,Text: Fake (11.0%)
+2025-07-07 22:15:53,India Successfully Launches Chandrayaan-4 to Study Lunar South Pole,,,Text: Fake (16.0%)
+2025-07-07 22:30:20,India Successfully Launches Chandrayaan-4 to Study Lunar South Pole,,,Text: Fake (19.0%)
+2025-07-07 22:31:41,Chandrayaan-4 Launch Success,,,Text: Fake (9.0%)
+2025-07-07 22:53:56,rcb won ipl 2025,,,"Text: Fake (Real: 9.48%, Fake: 90.52%)"
+2025-07-07 22:58:58,rcb won ipl 2025,,adp.jpg,"Image: Real (85.0%) | Text: Fake (Real: 9.48%, Fake: 90.52%)"
+2025-10-08 12:04:26,india won asia cup,,,"Text: Fake (Real: 19.99%, Fake: 80.01%)"
+2025-10-08 12:29:38,india won asia cup 2025,,,"Text: Fake (Real: 30.27%, Fake: 69.73%)"
+2025-10-08 12:36:37,india won asia cup 2025,,,"Text: Fake (Real: 30.27%, Fake: 69.73%)"

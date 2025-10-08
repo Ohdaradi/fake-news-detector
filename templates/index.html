@@ -1,50 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Fake Detector</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RealFake AI - Fake News Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>">
 </head>
 <body>
-    <div class="container">
-        <h1>Fake News & Image Detector</h1>
-        <form id="detectForm" enctype="multipart/form-data">
-            <label for="text">Enter Text:</label>
-            <textarea id="text" name="text" rows="4" placeholder="Type or paste news content..."></textarea>
-
-            <label for="link">Enter URL:</label>
-            <input type="url" id="link" name="link" placeholder="https://example.com">
-
-            <label for="image">Upload Image:</label>
-            <input type="file" id="image" name="image" accept="image/*">
-
-            <button type="submit">Submit</button>
-        </form>
-        <div id="result"></div>
+  <div class="container">
+    <!-- Top Navigation -->
+    <div class="top-nav">
+      <div class="header">
+        <h1>🔍 RealFake AI</h1>
+        <p>Advanced Multi-Modal Fake News Detection</p>
+      </div>
+      <div class="nav-links">
+        <label class="theme-toggle">
+          <input type="checkbox" id="darkModeToggle">
+          <span class="slider"></span>
+        </label>
+        <a href="/dashboard" class="btn btn-info btn-sm">📊 Analytics</a>
+      </div>
     </div>
 
-    <script>
-        const form = document.getElementById('detectForm');
-        const resultDiv = document.getElementById('result');
+    <!-- Main Content -->
+    <div class="main-container">
+      <!-- Input Cards -->
+      <div class="row g-4 mb-4">
+        <!-- Text Input Card -->
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">📝 Text Analysis</h5>
+              <form id="predictForm" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label for="text" class="form-label">News Content</label>
+                  <textarea class="form-control" name="text" id="text" rows="4" 
+                    placeholder="Paste your news article, social media post, or any text content here for analysis..."></textarea>
+                </div>
+            </div>
+          </div>
+        </div>
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            resultDiv.textContent = 'Processing...';
+        <!-- URL Input Card -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">🔗 URL Analysis</h5>
+              <div class="form-group">
+                <label for="link" class="form-label">Website URL</label>
+                <input type="text" class="form-control" name="link" id="link" 
+                  placeholder="https://example.com/news-article" />
+              </div>
+            </div>
+          </div>
+        </div>
 
-            const formData = new FormData(form);
+        <!-- Image Input Card -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">🖼️ Image Analysis</h5>
+              <div class="form-group">
+                <label for="image" class="form-label">Upload Image</label>
+                <input class="form-control" type="file" name="image" id="image" accept="image/*" />
+                <img id="previewImg" class="preview" style="display: none;" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-            try {
-                const response = await fetch('/predict', {
-                    method: 'POST',
-                    body: formData
-                });
+      <!-- Action Button -->
+      <div class="text-center mb-4">
+        <button type="submit" class="btn btn-primary btn-lg" id="analyzeBtn">
+          <span class="btn-text">� Analyze Content</span>
+          <span class="spinner" id="btnSpinner" style="display: none;"></span>
+        </button>
+      </div>
+      </form>
+      <!-- Results Section -->
+      <div class="accordion" id="resultAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+              data-bs-target="#collapseResult" aria-expanded="false">
+              🎯 Analysis Results
+            </button>
+          </h2>
+          <div id="collapseResult" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              <div id="loading" class="loading d-none">
+                <div class="spinner"></div>
+                <span>Analyzing content with AI models...</span>
+              </div>
+              <div id="resultBox" class="d-none">
+                <div id="resultContent"></div>
+              </div>
+              <div id="noResults" class="text-center" style="color: #64748b; padding: 2rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🤖</div>
+                <p>Ready to analyze your content! Enter text, URL, or upload an image above.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-                const data = await response.json();
-                resultDiv.textContent = `Prediction: ${data.result}`;
-            } catch (err) {
-                resultDiv.textContent = 'Error: ' + err.message;
-            }
+  <script>
+    // DOM Elements
+    const form = document.getElementById("predictForm");
+    const resultBox = document.getElementById("resultBox");
+    const resultContent = document.getElementById("resultContent");
+    const loading = document.getElementById("loading");
+    const previewImg = document.getElementById("previewImg");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const btnSpinner = document.getElementById("btnSpinner");
+    const noResults = document.getElementById("noResults");
+    const resultAccordion = document.getElementById("collapseResult");
+
+    // Image Preview
+    document.getElementById("image").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          previewImg.src = event.target.result;
+          previewImg.style.display = "block";
+          previewImg.style.animation = "fadeIn 0.3s ease-in";
+        };
+        reader.readAsDataURL(file);
+      } else {
+        previewImg.style.display = "none";
+      }
+    });
+
+    // Form Submission
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      
+      // Check if any input is provided
+      const text = document.getElementById("text").value.trim();
+      const link = document.getElementById("link").value.trim();
+      const image = document.getElementById("image").files[0];
+      
+      if (!text && !link && !image) {
+        showError("Please provide at least one input: text, URL, or image.");
+        return;
+      }
+
+      // Start loading state
+      startLoading();
+      
+      const formData = new FormData(form);
+
+      fetch("/predict", {
+        method: "POST",
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          stopLoading();
+          if (data.result) {
+            showResults(data.result);
+          } else if (data.error) {
+            showError(data.error);
+          }
+        })
+        .catch(err => {
+          stopLoading();
+          showError("Network error. Please try again.");
+          console.error("Error:", err);
         });
-    </script>
+    });
+
+    function startLoading() {
+      // Show loading state
+      loading.classList.remove("d-none");
+      resultBox.classList.add("d-none");
+      noResults.style.display = "none";
+      
+      // Update button state
+      analyzeBtn.disabled = true;
+      btnSpinner.style.display = "inline-block";
+      document.querySelector(".btn-text").textContent = "Analyzing...";
+      
+      // Show accordion
+      if (!resultAccordion.classList.contains("show")) {
+        new bootstrap.Collapse(resultAccordion).show();
+      }
+    }
+
+    function stopLoading() {
+      loading.classList.add("d-none");
+      
+      // Reset button state
+      analyzeBtn.disabled = false;
+      btnSpinner.style.display = "none";  
+      document.querySelector(".btn-text").textContent = "🚀 Analyze Content";
+    }
+
+    function showResults(resultString) {
+      const parts = resultString.split(" | ");
+      let resultsHTML = '<div class="results-grid">';
+      
+      parts.forEach(item => {
+        const isReal = item.includes("Real");
+        const icon = isReal ? "✅" : "❌";
+        const colorClass = isReal ? "success" : "danger";
+        const bgClass = isReal ? "alert-success" : "alert-danger";
+        
+        resultsHTML += `
+          <div class="result-item ${bgClass}">
+            <span class="result-icon">${icon}</span>
+            <span class="result-text">${item}</span>
+          </div>
+        `;
+      });
+      
+      resultsHTML += '</div>';
+      
+      // Add confidence summary
+      const hasMultiple = parts.length > 1;
+      if (hasMultiple) {
+        const realCount = parts.filter(p => p.includes("Real")).length;
+        const fakeCount = parts.length - realCount;
+        
+        resultsHTML += `
+          <div class="mt-3 p-3" style="background: #f8fafc; border-radius: 8px; border-left: 4px solid var(--info-color);">
+            <strong>📊 Summary:</strong> ${realCount} Real, ${fakeCount} Fake predictions
+            ${realCount > fakeCount ? " - <span style='color: var(--success-color)'>Likely Real</span>" : " - <span style='color: var(--danger-color)'>Likely Fake</span>"}
+          </div>
+        `;
+      }
+      
+      resultContent.innerHTML = resultsHTML;
+      resultBox.classList.remove("d-none");
+      
+      // Add animation
+      resultBox.style.animation = "slideIn 0.4s ease-out";
+    }
+
+    function showError(message) {
+      resultContent.innerHTML = `
+        <div class="alert alert-danger">
+          <strong>❌ Error:</strong> ${message}
+        </div>
+      `;
+      resultBox.classList.remove("d-none");
+    }
+  </script>
+  <script>
+    // Dark Mode Toggle
+    const darkModeToggle = document.getElementById("darkModeToggle");
+    
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      const isDark = document.body.classList.contains("dark-mode");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+      darkModeToggle.checked = isDark;
+    }
+
+    // Initialize theme
+    window.onload = function () {
+      const savedTheme = localStorage.getItem("theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      
+      if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+        document.body.classList.add("dark-mode");
+        darkModeToggle.checked = true;
+      }
+    };
+
+    darkModeToggle.addEventListener("change", toggleDarkMode);
+
+    // Add CSS animations
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      @keyframes slideIn {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      
+      .results-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
